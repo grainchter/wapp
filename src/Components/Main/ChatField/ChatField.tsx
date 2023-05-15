@@ -30,8 +30,6 @@ let ChatField = (prop: {
     return response.json();
   };
 
-  //получаем данные
-
   let getData = async (url = "") => {
     const response = await fetch(url, {
       method: "GET",
@@ -116,8 +114,6 @@ let ChatField = (prop: {
   };
 
   useEffect(() => {
-    
-    
     listener();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -152,7 +148,9 @@ let ChatField = (prop: {
                 id=""
                 onChange={(e) => setMessageText(e.target.value)}
               />
-              <button type="submit"><SendIcon /></button>
+              <button type="submit">
+                <SendIcon />
+              </button>
             </form>
           </div>
         </div>
