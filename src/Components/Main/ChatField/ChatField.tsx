@@ -5,6 +5,9 @@ import { SendIcon } from "../../../image/svg/send";
 interface IMessages {
   type: string;
   message: string;
+  messageId: string;
+  status?: string;
+  time?: string;
 }
 
 let ChatField = (prop: {
@@ -13,7 +16,7 @@ let ChatField = (prop: {
   phoneNum: string | undefined;
 }) => {
   const [messagesList, setMessagesList] = useState<Array<IMessages> | any>([]);
-  const [messageText, setMessageText] = useState<string | undefined>(undefined);
+  const [messageText, setMessageText] = useState<string>("");
 
   const ref = useRef<any>();
 
@@ -68,28 +71,56 @@ let ChatField = (prop: {
       let messageObj: IMessages = {
         message: "",
         type: "",
+        messageId: "",
+        status: "",
+        time: "",
       };
 
-      if (data.body.messageData !== undefined) {
-        if (data.body.messageData.textMessageData !== undefined) {
-          messageObj.message =
-            data.body.messageData.textMessageData.textMessage;
-          messageObj.type = data.body.senderData.sender;
+      if (data.body.typeWebhook === "outgoingAPIMessageReceived") {
+        if (data.body.messageData !== undefined) {
+          if (data.body.messageData.extendedTextMessageData !== undefined) {
+            messageObj.message =
+              data.body.messageData.extendedTextMessageData.text;
+            messageObj.type = data.body.senderData.sender;
+            messageObj.messageId = data.body.idMessage;
 
-          messageArray.push(messageObj);
+            const date = new Date(data.body.timestamp * 1000);
+            let hour = date.getHours();
+            let min = date.getMinutes();
+
+            messageObj.time = hour.toString() + ":" + min.toString();
+
+            messageArray.push(messageObj);
+          }
         }
+      } else if (data.body.typeWebhook === "incomingMessageReceived") {
+        if (data.body.messageData !== undefined) {
+          if (data.body.messageData.textMessageData !== undefined) {
+            messageObj.message =
+              data.body.messageData.textMessageData.textMessage;
+            messageObj.type = data.body.senderData.sender;
+            messageObj.messageId = data.body.idMessage;
 
-        if (data.body.messageData.extendedTextMessageData !== undefined) {
-          messageObj.message =
-            data.body.messageData.extendedTextMessageData.text;
-          messageObj.type = data.body.senderData.sender;
+            const date = new Date(data.body.timestamp * 1000);
+            let hour = date.getHours();
+            let min = date.getMinutes();
 
-          messageArray.push(messageObj);
+            messageObj.time = hour.toString() + ":" + min.toString();
+            messageArray.push(messageObj);
+          }
+        }
+      } else if (data.body.typeWebhook === "outgoingMessageStatus") {
+        if (data.body.status !== undefined) {
+          messageArray.forEach((item: IMessages) =>
+            item.messageId === data.body.idMessage
+              ? (item.status = data.body.status)
+              : (item.status = item.status)
+          );
         }
       }
 
       const result = messageArray.reduce((o: any, i: any) => {
-        if (!o.find((v: any) => v.message === i.message)) {
+        if (!o.find((v: any) => v.messageId === i.messageId)) {
           o.push(i);
         }
         return o;
@@ -134,7 +165,22 @@ let ChatField = (prop: {
                   key={i}
                 >
                   <div className={s.item}>
-                    <p>{item.message}</p>
+                    <div className={s.element}>
+                      <p>{item.message}</p>
+                      <span
+                        className={
+                          item.status === "delivered"
+                            ? s.delivered
+                            : item.status === "sent"
+                            ? s.sent
+                            : item.status === "read"
+                            ? s.read
+                            : undefined
+                        }
+                      >
+                        {item.time}
+                      </span>
+                    </div>
                   </div>
                 </div>
               ))}
