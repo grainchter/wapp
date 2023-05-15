@@ -1,6 +1,5 @@
 import { useState } from "react";
 import s from "./Login.module.scss";
-import Main from "../Main/Main";
 
 let Login = (prop: { editLoginData:any }) => {
   const [idInstance, setIdInstance] = useState<string | undefined>(undefined);
