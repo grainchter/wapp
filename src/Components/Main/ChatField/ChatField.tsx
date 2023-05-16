@@ -85,10 +85,10 @@ let ChatField = (prop: {
             messageObj.messageId = data.body.idMessage;
 
             const date = new Date(data.body.timestamp * 1000);
-            let hour = date.getHours();
-            let min = date.getMinutes();
+            let hour: string = date.getHours().toString();
+            let min: string = "0" + date.getMinutes().toString();
 
-            messageObj.time = hour.toString() + ":" + min.toString();
+            messageObj.time = hour + ":" + min.substr(-2);
 
             messageArray.push(messageObj);
           }
