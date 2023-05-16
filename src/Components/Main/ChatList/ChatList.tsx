@@ -27,7 +27,7 @@ let ChatList = (prop: { editSelectedChat: any }) => {
     }
 
     setNewChat(undefined);
-    setAddChatStatus(!addChatStatus);
+    setAddChatStatus(!addChatStatus);    
   };
 
   return (
@@ -50,6 +50,7 @@ let ChatList = (prop: { editSelectedChat: any }) => {
         ))}
       {!addChatStatus && chatList.length < 1 && (
         <div className={s.addBtn}>
+          <p>Введите номер телефона</p>
           <button
             onClick={() => {
               setAddChatStatus(!addChatStatus);
@@ -61,7 +62,9 @@ let ChatList = (prop: { editSelectedChat: any }) => {
       )}
 
       {addChatStatus && chatList.length < 1 && (
-        <div className={s.addChatContainer}>
+        <div>
+          <p>Введите номер телефона</p>
+          <div className={s.addChatContainer}>
           <input
             type="number"
             name=""
@@ -71,6 +74,8 @@ let ChatList = (prop: { editSelectedChat: any }) => {
           <button onClick={addNewChat}>
             <SendIcon />
           </button>
+          </div>
+
         </div>
       )}
     </div>

@@ -32,22 +32,26 @@
     }
   }
 
-  & > .addChatContainer {
-    width: 100%;
-    display: grid;
-    grid-template-columns: 1fr auto;
-
-    & > input {
-      height: 25px;
-      text-indent: 15px;
-    }
-
-    & > button {
-      cursor: pointer;
-      border: none;
-      padding: 5px;
-      background-color: #00a884;
-      border-radius: 5px;
+  & > div {
+    & > .addChatContainer {
+      width: 100%;
+      display: grid;
+      grid-template-columns: 1fr auto;
+  
+      & > input {
+        height: 25px;
+        text-indent: 15px;
+      }
+  
+      & > button {
+        cursor: pointer;
+        border: none;
+        padding: 5px;
+        background-color: #00a884;
+        border-radius: 5px;
+      }
     }
   }
+
+
 }
